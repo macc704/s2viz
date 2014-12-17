@@ -2,119 +2,44 @@
 
 angular.module('s2vizApp')
     .controller('Dc1Ctrl', function($scope) {
-        var data = [{
-            date: "12/27/2012",
-            http_404: 2,
-            http_200: 190,
-            http_302: 100
-        }, {
-            date: "12/28/2012",
-            http_404: 2,
-            http_200: 10,
-            http_302: 100
-        }, {
-            date: "12/29/2012",
-            http_404: 1,
-            http_200: 300,
-            http_302: 200
-        }, {
-            date: "12/30/2012",
-            http_404: 2,
-            http_200: 90,
-            http_302: 0
-        }, {
-            date: "12/31/2012",
-            http_404: 20,
-            http_200: 90,
-            http_302: 0
-        }, {
-            date: "01/01/2013",
-            http_404: 2,
-            http_200: 90,
-            http_302: 0
-        }, {
-            date: "01/02/2013",
-            http_404: 1,
-            http_200: 10,
-            http_302: 1
-        }, {
-            date: "01/03/2013",
-            http_404: 2,
-            http_200: 90,
-            http_302: 0
-        }, {
-            date: "01/04/2013",
-            http_404: 2,
-            http_200: 90,
-            http_302: 0
-        }, {
-            date: "01/05/2013",
-            http_404: 2,
-            http_200: 90,
-            http_302: 0
-        }, {
-            date: "01/06/2013",
-            http_404: 2,
-            http_200: 200,
-            http_302: 1
-        }, {
-            date: "01/07/2013",
-            http_404: 1,
-            http_200: 200,
-            http_302: 100
-        }];
-
-        // var notes = [{
-        //     id: '1',
-        //     author: 'A',
-        //     buildson: ''
-        // }, {
-        //     id: '2',
-        //     author: 'B',
-        //     buildson: '1'
-        // }, {
-        //     id: '3',
-        //     author: 'B',
-        //     buildson: '1'
-        // }];
-
-        var buildons = [{
+        var links = [{
             authorTo: 'A',
             authorFrom: 'B',
+            type: 'buildson',            
             date: "01/07/2013",
         }, {
             authorTo: 'A',
             authorFrom: 'B',
-            date: "01/07/2013",
+            type: 'buildson',                        
+            date: "02/07/2013",
         }, {
             authorTo: 'A',
             authorFrom: 'B',
-            date: "01/07/2013",
+            type: 'read',                        
+            date: "03/07/2013",
         }, {
             authorTo: 'A',
             authorFrom: 'B',
-            date: "01/07/2013",
+            type: 'read',                                    
+            date: "04/07/2013",
         }, {
             authorTo: 'B',
             authorFrom: 'C',
-            date: "01/07/2013",
+            type: 'buildson',                                    
+            date: "05/07/2013",
         }];
 
-        // var parseDate = d3.time.format("%m/%d/%Y").parse;
-        // data.forEach(function(d) {
-        //     d.date = parseDate(d.date);
-        //     d.total = d.http_404 + d.http_200 + d.http_302;
-        // });
 
         var parseDate = d3.time.format("%m/%d/%Y").parse;
-        data.forEach(function(d) {
+        links.forEach(function(d) {
             d.date = parseDate(d.date);
-            d.total = d.http_404 + d.http_200 + d.http_302;
-            d.Year = d.date.getFullYear(); //yearの属性を追加
+            d.total = 100;
+            //d.total = d.http_404 + d.http_200 + d.http_302;
+            //d.Year = d.date.getFullYear(); //yearの属性を追加
         });
 
         //dataからcrossfilterのインスタンスを作成
-        var ndx = crossfilter(data);
+        var ndx = crossfilter(links);
         //X軸をtimelineにするためdateのdimensionを作成
         var dateDim = ndx.dimension(function(d) {
             return d.date;
@@ -134,12 +59,11 @@ angular.module('s2vizApp')
             .group(hits)
             .x(d3.time.scale().domain([minDate, maxDate]));
 
-
         //pie
 
         //パイチャートのdimensionを作成
         var yearDim = ndx.dimension(function(d) {
-            return +d.Year;
+            return d.type;
         });
         //パイチャートののkey-valueデータをyearDimから作成
         var year_total = yearDim.group().reduceSum(function(d) {
@@ -179,10 +103,7 @@ angular.module('s2vizApp')
         $scope.master = []; // MASTER DATA STORED BY YEAR
         d3.csv('/assets/trade.csv', function(err, data2) {
 
-            buildons.forEach(function(d) {
-                //d.year = +d.year;
-                //year, importer1, flow1, flow2.
-                //d.year = 2000;
+            links.forEach(function(d) {
                 d.importer1 = d.authorFrom;
                 d.importer2 = d.authorTo;
                 d.value = 1;
