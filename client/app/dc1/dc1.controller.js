@@ -64,6 +64,42 @@ angular.module('s2vizApp')
             http_302: 100
         }];
 
+        // var notes = [{
+        //     id: '1',
+        //     author: 'A',
+        //     buildson: ''
+        // }, {
+        //     id: '2',
+        //     author: 'B',
+        //     buildson: '1'
+        // }, {
+        //     id: '3',
+        //     author: 'B',
+        //     buildson: '1'
+        // }];
+
+        var buildons = [{
+            authorTo: 'A',
+            authorFrom: 'B',
+            date: "01/07/2013",
+        }, {
+            authorTo: 'A',
+            authorFrom: 'B',
+            date: "01/07/2013",
+        }, {
+            authorTo: 'A',
+            authorFrom: 'B',
+            date: "01/07/2013",
+        }, {
+            authorTo: 'A',
+            authorFrom: 'B',
+            date: "01/07/2013",
+        }, {
+            authorTo: 'B',
+            authorFrom: 'C',
+            date: "01/07/2013",
+        }];
+
         // var parseDate = d3.time.format("%m/%d/%Y").parse;
         // data.forEach(function(d) {
         //     d.date = parseDate(d.date);
@@ -91,9 +127,7 @@ angular.module('s2vizApp')
         var minDate = dateDim.bottom(1)[0].date;
         var maxDate = dateDim.top(1)[0].date;
 
-        //dcのlineChartインスタンスを作成
         var hitslineChart = dc.lineChart("#chart-line-hitsperday");
-        //parameter設定
         hitslineChart
             .width(450).height(200)
             .dimension(dateDim)
@@ -142,24 +176,20 @@ angular.module('s2vizApp')
             .legend(dc.legend().x(50).y(10).itemHeight(13).gap(5))
             .yAxisLabel("Hits per day");
 
-        $scope.master = {}; // MASTER DATA STORED BY YEAR
+        $scope.master = []; // MASTER DATA STORED BY YEAR
         d3.csv('/assets/trade.csv', function(err, data2) {
 
-            data.forEach(function(d) {
-                    //d.year = +d.year;
-                    //year, importer1, flow1, flow2.
-                    d.year = 2000;
-                    d.importer1 = d.http_404;
-                    d.importer2 = d.http_200;                    
-                    d.flow1 = +d.http_404;
-                    d.flow2 = +d.http_200;
+            buildons.forEach(function(d) {
+                //d.year = +d.year;
+                //year, importer1, flow1, flow2.
+                //d.year = 2000;
+                d.importer1 = d.authorFrom;
+                d.importer2 = d.authorTo;
+                d.value = 1;
 
-                    if (!$scope.master[d.year]) {
-                        $scope.master[d.year] = []; // STORED BY YEAR
-                    }
-                    $scope.master[2000].push(d);
-                })
-            $scope.drawChords($scope.master[2000]);
+                $scope.master.push(d);
+            })
+            $scope.drawChords($scope.master);
         });
 
         dc.renderAll();

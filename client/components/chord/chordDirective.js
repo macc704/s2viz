@@ -29,14 +29,16 @@ function ($window, matrixFactory) {
         if (!items[0]) {
           value = 0;
         } else {
+          //console.log(items);
           value = items.reduce(function (m, n) {
-            return n.flow2;
+            return m + n.value;
             // if (r === c) {
             //   return m + (n.flow1 + n.flow2);
             // } else {
             //   return m + (n.importer1 === r.name ? n.flow1: n.flow2);
             // }
           }, 0);
+          //console.log(value);
         }
         return {value: value, data: items};
       });
