@@ -42,8 +42,8 @@ angular.module('s2vizApp')
                 //console.log(d.date);
                 d.total = 100;
                 d.http_200 = 1;
-                d.http_302 = 1;
-                d.http_404 = 1;
+                //d.http_302 = 1;
+                //d.http_404 = 1;
                 //d.total = d.http_404 + d.http_200 + d.http_302;
                 //d.Year = d.date.getFullYear(); //yearの属性を追加
             });
@@ -63,11 +63,11 @@ angular.module('s2vizApp')
             var maxDate = dateDim.top(1)[0].date;
 
             var hitslineChart = dc.lineChart("#chart-line-hitsperday");
-            hitslineChart
-                .width(450).height(200)
-                .dimension(dateDim)
-                .group(hits)
-                .x(d3.time.scale().domain([minDate, maxDate]));
+            // hitslineChart
+            //     .width(800).height(200)
+            //     .dimension(dateDim)
+            //     .group(hits)
+            //     .x(d3.time.scale().domain([minDate, maxDate]));
 
             //pie
 
@@ -92,19 +92,19 @@ angular.module('s2vizApp')
             var status_200 = dateDim.group().reduceSum(function(d) {
                 return d.http_200;
             });
-            var status_302 = dateDim.group().reduceSum(function(d) {
-                return d.http_302;
-            });
-            var status_404 = dateDim.group().reduceSum(function(d) {
-                return d.http_404;
-            });
+            // var status_302 = dateDim.group().reduceSum(function(d) {
+            //     return d.http_302;
+            // });
+            // var status_404 = dateDim.group().reduceSum(function(d) {
+            //     return d.http_404;
+            // });
 
             hitslineChart
-                .width(450).height(200)
+                .width(700).height(200)
                 .dimension(dateDim)
                 .group(status_200, "200")
-                .stack(status_302, "302")
-                .stack(status_404, "404")
+                //.stack(status_302, "302")
+                //.stack(status_404, "404")
                 .renderArea(true)
                 .x(d3.time.scale().domain([minDate, maxDate]))
                 .legend(dc.legend().x(50).y(10).itemHeight(13).gap(5))
