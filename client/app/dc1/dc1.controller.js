@@ -142,63 +142,24 @@ angular.module('s2vizApp')
             .legend(dc.legend().x(50).y(10).itemHeight(13).gap(5))
             .yAxisLabel("Hits per day");
 
-        // var datatable = dc.dataTable("#dc-data-table");
-        // datatable
-        //     .dimension(dateDim)
-        //     .group(function(d) {
-        //         return d.Year;
-        //     })
-        //     .columns([
-        //         function(d) {
-        //             return d.date.getDate() + "/" + (d.date.getMonth() + 1) + "/" + d.date.getFullYear();
-        //         },
-        //         function(d) {
-        //             return d.http_200;
-        //         },
-        //         function(d) {
-        //             return d.http_302;
-        //         },
-        //         function(d) {
-        //             return d.http_404;
-        //         },
-        //         function(d) {
-        //             return d.total;
-        //         }
-        //     ]);
-        $scope.update = function() {
-            var data = $scope.master[1980];
-
-            // if (data && $scope.hasFilters) {
-            //     $scope.drawChords(data.filter(function(d) {
-            //         var fl = $scope.filters;
-            //         var v1 = d.importer1,
-            //             v2 = d.importer2;
-
-            //         if ((fl[v1] && fl[v1].hide) || (fl[v2] && fl[v2].hide)) {
-            //             return false;
-            //         }
-            //         return true;
-            //     }));
-            // } else if (data) {
-            $scope.drawChords(data);
-            //}
-        };
-
         $scope.master = {}; // MASTER DATA STORED BY YEAR
-        d3.csv('/assets/trade.csv', function(err, data) {
+        d3.csv('/assets/trade.csv', function(err, data2) {
 
             data.forEach(function(d) {
-                    d.year = +d.year;
-                    d.flow1 = +d.flow1;
-                    d.flow2 = +d.flow2;
+                    //d.year = +d.year;
+                    //year, importer1, flow1, flow2.
+                    d.year = 2000;
+                    d.importer1 = d.http_404;
+                    d.importer2 = d.http_200;                    
+                    d.flow1 = +d.http_404;
+                    d.flow2 = +d.http_200;
 
                     if (!$scope.master[d.year]) {
                         $scope.master[d.year] = []; // STORED BY YEAR
                     }
-                    $scope.master[d.year].push(d);
+                    $scope.master[2000].push(d);
                 })
-                //console.log($scope.master);//ok
-            $scope.update();
+            $scope.drawChords($scope.master[2000]);
         });
 
         dc.renderAll();
