@@ -150,7 +150,7 @@ function ($window, matrixFactory) {
         d3.event.stopPropagation();
         dimChords(d);
         d3.select("#tooltip").style("opacity", 1);
-        $scope.updateTooltip(matrix.read(d));
+        //$scope.updateTooltip(matrix.read(d));
       }
 
       function hideTooltip() {
