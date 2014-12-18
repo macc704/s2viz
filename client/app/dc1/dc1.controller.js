@@ -118,12 +118,36 @@ angular.module('s2vizApp')
                 $scope.drawChords($scope.master);
             });
 
-//var chart = dc.baseMixin({});
-console.log(dc);
-console.log(dc.stackMixin);
-var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
-//console.log(dc);
-//            var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
+            //var chart = dc.baseMixin({});
+            //console.log(yearRingChart.dc);
+            //console.log(dc);
+            //console.log(dc.dc);
+            //console.log(dc.stackMixin);
+            //var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
+            //あきらめ
+            //console.log(dc);
+            //            var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
+
+            var x = dc.pieChart("#x");
+            x
+                .width(200).height(200)
+                .dimension(yearDim)
+                .group(year_total)
+                .innerRadius(30);
+            //            console.log(x.doRedraw);
+            console.log(x);
+            x.doRedraw = function() {
+                console.log('x');
+            };
+            x.doRender = function() {
+                console.log('y');
+            };
+
+            console.log(ndx);
+            console.log(ndx.groupAll());
+            //ndx.order();
+            //            console.log(x._chart);
+            //            console.log(x.eval('_chart'));
 
             dc.renderAll();
         });
