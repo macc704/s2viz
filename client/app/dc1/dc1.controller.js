@@ -116,7 +116,8 @@ angular.module('s2vizApp')
                 links.forEach(function(d) {
                     d.importer1 = d.from;
                     d.importer2 = d.to;
-                    d.value = 1;
+                    d.flow1 = 0.1;
+                    d.flow2 = 1;                    
 
                     $scope.master.push(d);
                 })

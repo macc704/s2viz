@@ -31,12 +31,15 @@ function ($window, matrixFactory) {
         } else {
           //console.log(items);
           value = items.reduce(function (m, n) {
-            return m + n.value;
-            // if (r === c) {
-            //   return m + (n.flow1 + n.flow2);
-            // } else {
-            //   return m + (n.importer1 === r.name ? n.flow1: n.flow2);
-            // }
+            //return m + n.flow2;
+             if (r === c) {
+                return m + (n.flow1 + n.flow2);
+              } else {
+                //console.log(n.importer1, r.name);
+                //return m + n.flow2;
+                //return m + 0.1;
+                return m + (n.importer1 === r.name ? n.flow1: n.flow2);
+              }
           }, 0);
           //console.log(value);
         }

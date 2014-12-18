@@ -1,16 +1,21 @@
 <div class="col-md-12">
-    This is the dc1 view.
-
-    <div id="chart-line-hitsperday"></div>
-
-    <div id="chart-ring-year"></div>
-
 
     <div class="large-7 small-6 columns" role="content">
         <article>
             <chord-diagram></chord-diagram>
-            <h6 class="text-center">International Trade Flows <span>{{ selected_year }}</span></h6>
+        </article>
+        <h6 class="text-center">Reading Network</h6>
+    </div>
+
+    <div class="large-7 small-6 columns" role="content" ng-controller="Dc1Ctrl2">
+        <article>
+            <chord-diagram></chord-diagram>
+            <h6 class="text-center">Being read Network</h6>
         </article>
     </div>
+
+    <div id="chart-line-hitsperday"></div>
+
+    <div id="chart-ring-year"></div>
 
 </div>
