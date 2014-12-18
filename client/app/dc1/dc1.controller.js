@@ -50,6 +50,9 @@ angular.module('s2vizApp')
 
             //dataからcrossfilterのインスタンスを作成
             var ndx = crossfilter(links);
+
+            //line chart
+
             //X軸をtimelineにするためdateのdimensionを作成
             var dateDim = ndx.dimension(function(d) {
                 return d.date;
@@ -62,12 +65,27 @@ angular.module('s2vizApp')
             var minDate = dateDim.bottom(1)[0].date;
             var maxDate = dateDim.top(1)[0].date;
 
+            //Y軸にtotalを表示するためのkey-valueデータをhttpステータス毎に作成
+            var status_200 = dateDim.group().reduceSum(function(d) {
+                return d.http_200;
+            });
+            // var status_302 = dateDim.group().reduceSum(function(d) {
+            //     return d.http_302;
+            // });
+            // var status_404 = dateDim.group().reduceSum(function(d) {
+            //     return d.http_404;
+            // });
             var hitslineChart = dc.lineChart("#chart-line-hitsperday");
-            // hitslineChart
-            //     .width(800).height(200)
-            //     .dimension(dateDim)
-            //     .group(hits)
-            //     .x(d3.time.scale().domain([minDate, maxDate]));
+            hitslineChart
+                .width(700).height(200)
+                .dimension(dateDim)
+                .group(status_200, "Read")
+                //.stack(status_302, "302")
+                //.stack(status_404, "404")
+                .renderArea(true)
+                .x(d3.time.scale().domain([minDate, maxDate]))
+                .legend(dc.legend().x(50).y(10).itemHeight(13).gap(5))
+                .yAxisLabel("Hits per day");
 
             //pie
 
@@ -86,30 +104,6 @@ angular.module('s2vizApp')
                 .group(year_total)
                 .innerRadius(30);
 
-            //bar
-
-            //Y軸にtotalを表示するためのkey-valueデータをhttpステータス毎に作成
-            var status_200 = dateDim.group().reduceSum(function(d) {
-                return d.http_200;
-            });
-            // var status_302 = dateDim.group().reduceSum(function(d) {
-            //     return d.http_302;
-            // });
-            // var status_404 = dateDim.group().reduceSum(function(d) {
-            //     return d.http_404;
-            // });
-
-            hitslineChart
-                .width(700).height(200)
-                .dimension(dateDim)
-                .group(status_200, "200")
-                //.stack(status_302, "302")
-                //.stack(status_404, "404")
-                .renderArea(true)
-                .x(d3.time.scale().domain([minDate, maxDate]))
-                .legend(dc.legend().x(50).y(10).itemHeight(13).gap(5))
-                .yAxisLabel("Hits per day");
-
             $scope.master = []; // MASTER DATA STORED BY YEAR
             d3.csv('/assets/trade.csv', function(err, data2) {
 
@@ -117,12 +111,19 @@ angular.module('s2vizApp')
                     d.importer1 = d.from;
                     d.importer2 = d.to;
                     d.flow1 = 0.1;
-                    d.flow2 = 1;                    
+                    d.flow2 = 1;
 
                     $scope.master.push(d);
                 })
                 $scope.drawChords($scope.master);
             });
+
+//var chart = dc.baseMixin({});
+console.log(dc);
+console.log(dc.stackMixin);
+var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
+//console.log(dc);
+//            var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
 
             dc.renderAll();
         });
