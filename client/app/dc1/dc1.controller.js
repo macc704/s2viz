@@ -29,9 +29,14 @@ angular.module('s2vizApp')
         //     date: "05/07/2013",
         // }];
 
-        d3.json('/assets/la-week-read.json', function(err, data) {
+        d3.json('/assets/la-week-read-buildon.json', function(err, data) {
+            if (err) {
+                console.log('err');
+                console.log(err);
+            }
             //console.log(data);
             var links = data;
+            console.log(links);
             //"2014-12-11T23:07:24Z"
             //            var parseDate = d3.time.format("%m/%d/%Y").parse;
             var parseDate = d3.time.format("%Y-%m-%dT%H:%M:%SZ").parse;
@@ -39,9 +44,19 @@ angular.module('s2vizApp')
                 //var date = d.when.split('T')[0];
                 var date = d.when;
                 d.date = parseDate(date);
-                //console.log(d.date);
+                //console.log(d.date);                
                 d.total = 100;
-                d.http_200 = 1;
+                if (d.type === 'READ') {
+                    d.http_200 = 1;
+                } else {
+                    d.http_200 = 0;
+                }
+                if (d.type === 'BUILDON') {
+                    d.buildson = 1;
+                } else {
+                    d.buildson = 0;
+                }
+
                 //d.http_302 = 1;
                 //d.http_404 = 1;
                 //d.total = d.http_404 + d.http_200 + d.http_302;
@@ -69,6 +84,9 @@ angular.module('s2vizApp')
             var status_200 = dateDim.group().reduceSum(function(d) {
                 return d.http_200;
             });
+            var status_buildson = dateDim.group().reduceSum(function(d) {
+                return d.buildson;
+            });
             // var status_302 = dateDim.group().reduceSum(function(d) {
             //     return d.http_302;
             // });
@@ -80,6 +98,7 @@ angular.module('s2vizApp')
                 .width(700).height(200)
                 .dimension(dateDim)
                 .group(status_200, "Read")
+                .stack(status_buildson, "Buildson")                
                 //.stack(status_302, "302")
                 //.stack(status_404, "404")
                 .renderArea(true)
