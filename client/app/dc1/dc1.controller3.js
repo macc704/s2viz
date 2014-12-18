@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('s2vizApp')
-    .controller('Dc1Ctrl2', function($scope) {
- 
-        d3.json('/assets/la-week-read-buildon.json', function(err, data) {
+    .controller('Dc1Ctrl3', function($scope) {
+
+        d3.json('/assets/la-week-tfidf.json', function(err, data) {
 
             var links = data;
             //"2014-12-11T23:07:24Z"
@@ -23,18 +23,21 @@ angular.module('s2vizApp')
             });
 
             $scope.master = []; // MASTER DATA STORED BY YEAR
-            d3.csv('/assets/trade.csv', function(err, data2) {
+            //d3.csv('/assets/trade.csv', function(err, data2) {
 
-                links.forEach(function(d) {
+            links.forEach(function(d) {
+                //console.log(d);
+                if (d.weight > 0) {
                     d.importer1 = d.from;
                     d.importer2 = d.to;
-                    d.flow1 = 1;
-                    d.flow2 = 0.1;                    
+                    d.flow1 = 0.1;
+                    d.flow2 = d.weight;
 
                     $scope.master.push(d);
-                })
-                $scope.drawChords($scope.master);
-            });
+                }
+            })
+            $scope.drawChords($scope.master);
+            //});
 
             dc.renderAll();
         });

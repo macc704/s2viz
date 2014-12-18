@@ -36,7 +36,7 @@ angular.module('s2vizApp')
             }
             //console.log(data);
             var links = data;
-            console.log(links);
+            //console.log(links);
             //"2014-12-11T23:07:24Z"
             //            var parseDate = d3.time.format("%m/%d/%Y").parse;
             var parseDate = d3.time.format("%Y-%m-%dT%H:%M:%SZ").parse;
@@ -98,7 +98,7 @@ angular.module('s2vizApp')
                 .width(700).height(200)
                 .dimension(dateDim)
                 .group(status_200, "Read")
-                .stack(status_buildson, "Buildson")                
+                .stack(status_buildson, "Buildson")
                 //.stack(status_302, "302")
                 //.stack(status_404, "404")
                 .renderArea(true)
@@ -123,10 +123,21 @@ angular.module('s2vizApp')
                 .group(year_total)
                 .innerRadius(30);
 
-            $scope.master = []; // MASTER DATA STORED BY YEAR
-            d3.csv('/assets/trade.csv', function(err, data2) {
-
+            $scope.updateChord = function() {
+                $scope.master = []; // MASTER DATA STORED BY YEAR
+                //d3.csv('/assets/trade.csv', function(err, data2) {
+                // console.log(yearDim);
+                // console.log('group');
+                // console.log(yearDim.group());
+                // console.log(yearDim.group().size()); //returns 4                  
+                // console.log(yearDim.group().order().size()); //returns 4                                      
+                // console.log(yearDim.group().all()); //returns 4 
+                // console.log('filter');
+                // console.log(yearDim.filterAll());
+                // console.log(yearDim.filterAll());
                 links.forEach(function(d) {
+                    //                    console.log(d.type);
+
                     d.importer1 = d.from;
                     d.importer2 = d.to;
                     d.flow1 = 0.1;
@@ -135,7 +146,9 @@ angular.module('s2vizApp')
                     $scope.master.push(d);
                 })
                 $scope.drawChords($scope.master);
-            });
+                //});
+            };
+            $scope.updateChord();
 
             //var chart = dc.baseMixin({});
             //console.log(yearRingChart.dc);
@@ -154,16 +167,18 @@ angular.module('s2vizApp')
                 .group(year_total)
                 .innerRadius(30);
             //            console.log(x.doRedraw);
-            console.log(x);
+            //console.log(x);
             x.doRedraw = function() {
-                console.log('x');
+                //console.log('x');
+                $scope.updateChord();
             };
             x.doRender = function() {
-                console.log('y');
+                //console.log('y');
+                $scope.updateChord();
             };
 
-            console.log(ndx);
-            console.log(ndx.groupAll());
+            // console.log(ndx);
+            // console.log(ndx.groupAll());
             //ndx.order();
             //            console.log(x._chart);
             //            console.log(x.eval('_chart'));
