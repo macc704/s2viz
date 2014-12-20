@@ -29,7 +29,7 @@ angular.module('s2vizApp')
         //     date: "05/07/2013",
         // }];
 
-        d3.json('/assets/la-week-read-buildon.json', function(err, data) {
+        d3.json('/csv/la-week-read-buildon.json', function(err, data) {
             if (err) {
                 console.log('err');
                 console.log(err);

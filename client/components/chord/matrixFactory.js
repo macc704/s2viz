@@ -12,7 +12,7 @@ angular.module('s2vizApp').factory('matrixFactory', [function () {
     var matrix = {};
 
     matrix.update = function () {
-      _matrix = [], objs = [], entry = {};
+      var _matrix = [], objs = [], entry = {};
 
       layoutCache = {groups: {}, chords: {}};
 

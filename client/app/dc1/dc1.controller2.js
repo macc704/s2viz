@@ -3,7 +3,7 @@
 angular.module('s2vizApp')
     .controller('Dc1Ctrl2', function($scope) {
  
-        d3.json('/assets/la-week-read-buildon.json', function(err, data) {
+        d3.json('/csv/la-week-read-buildon.json', function(err, data) {
 
             var links = data;
             //"2014-12-11T23:07:24Z"
@@ -23,7 +23,7 @@ angular.module('s2vizApp')
             });
 
             $scope.master = []; // MASTER DATA STORED BY YEAR
-            d3.csv('/assets/trade.csv', function(err, data2) {
+            //d3.csv('/assets/trade.csv', function(err, data2) {
 
                 links.forEach(function(d) {
                     d.importer1 = d.from;
@@ -34,7 +34,7 @@ angular.module('s2vizApp')
                     $scope.master.push(d);
                 })
                 $scope.drawChords($scope.master);
-            });
+            //});
 
             dc.renderAll();
         });

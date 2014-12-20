@@ -42,4 +42,7 @@ module.exports = function(app) {
     app.use(morgan('dev'));
     app.use(errorHandler()); // Error handler - has to be last
   }
+
+  //var csvpath = path.join(config.root, 'csv');
+  //app.use('/csv', express.static(csvpath));
 };

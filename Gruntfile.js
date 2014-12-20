@@ -69,17 +69,17 @@ module.exports = function (grunt) {
         ],
         tasks: ['injector:css']
       },
-      mochaTest: {
-        files: ['server/**/*.spec.js'],
-        tasks: ['env:test', 'mochaTest']
-      },
-      jsTest: {
-        files: [
-          '<%= yeoman.client %>/{app,components}/**/*.spec.js',
-          '<%= yeoman.client %>/{app,components}/**/*.mock.js'
-        ],
-        tasks: ['newer:jshint:all', 'karma']
-      },
+      // mochaTest: {
+      //   files: ['server/**/*.spec.js'],
+      //   tasks: ['env:test', 'mochaTest']
+      // },
+      // jsTest: {
+      //   files: [
+      //     '<%= yeoman.client %>/{app,components}/**/*.spec.js',
+      //     '<%= yeoman.client %>/{app,components}/**/*.mock.js'
+      //   ],
+      //   tasks: ['newer:jshint:all', 'karma']
+      // },
       gruntfile: {
         files: ['Gruntfile.js']
       },
@@ -249,7 +249,7 @@ module.exports = function (grunt) {
       options: {
         assetsDirs: [
           '<%= yeoman.dist %>/public',
-          '<%= yeoman.dist %>/public/assets/images'
+          '<%= yeoman.dist %>/public/assets/images',
         ],
         // This is so we update image references in our ng-templates
         patterns: {
@@ -345,6 +345,7 @@ module.exports = function (grunt) {
             'bower_components/**/*',
             'assets/images/{,*/}*.{webp}',
             'assets/fonts/**/*',
+            'csv/*',            
             'index.html'
           ]
         }, {
@@ -606,8 +607,8 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('default', [
-    'newer:jshint',
-    'test',
+    // 'newer:jshint',
+    // 'test',
     'build'
   ]);
 };

@@ -3,7 +3,7 @@
 angular.module('s2vizApp')
     .controller('Dc1Ctrl3', function($scope) {
 
-        d3.json('/assets/la-week-tfidf.json', function(err, data) {
+        d3.json('/csv/la-week-tfidf.json', function(err, data) {
 
             var links = data;
             //"2014-12-11T23:07:24Z"
@@ -30,7 +30,7 @@ angular.module('s2vizApp')
                 if (d.weight > 0) {
                     d.importer1 = d.from;
                     d.importer2 = d.to;
-                    d.flow1 = 0.1;
+                    d.flow1 = d.weight;
                     d.flow2 = d.weight;
 
                     $scope.master.push(d);
