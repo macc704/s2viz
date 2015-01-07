@@ -1,5 +1,7 @@
 'use strict';
 
+var gTypeDim;
+
 angular.module('s2vizApp')
     .controller('Dc1Ctrl', function($scope) {
         // var links = [{
@@ -36,31 +38,21 @@ angular.module('s2vizApp')
             }
             //console.log(data);
             var links = data;
-            //console.log(links);
-            //"2014-12-11T23:07:24Z"
-            //            var parseDate = d3.time.format("%m/%d/%Y").parse;
             var parseDate = d3.time.format("%Y-%m-%dT%H:%M:%SZ").parse;
             links.forEach(function(d) {
-                //var date = d.when.split('T')[0];
                 var date = d.when;
                 d.date = parseDate(date);
-                //console.log(d.date);                
-                d.total = 100;
+                d.total = 1;
                 if (d.type === 'READ') {
-                    d.http_200 = 1;
+                    d.read = 1;
                 } else {
-                    d.http_200 = 0;
+                    d.read = 0;
                 }
                 if (d.type === 'BUILDON') {
                     d.buildson = 1;
                 } else {
                     d.buildson = 0;
                 }
-
-                //d.http_302 = 1;
-                //d.http_404 = 1;
-                //d.total = d.http_404 + d.http_200 + d.http_302;
-                //d.Year = d.date.getFullYear(); //yearの属性を追加
             });
 
             //dataからcrossfilterのインスタンスを作成
@@ -72,72 +64,49 @@ angular.module('s2vizApp')
             var dateDim = ndx.dimension(function(d) {
                 return d.date;
             });
-            //Y軸にtotalを表示するためのkey-valueデータをdateDimから作成
-            var hits = dateDim.group().reduceSum(function(d) {
-                return d.total;
-            });
 
             var minDate = dateDim.bottom(1)[0].date;
             var maxDate = dateDim.top(1)[0].date;
 
-            //Y軸にtotalを表示するためのkey-valueデータをhttpステータス毎に作成
-            var status_200 = dateDim.group().reduceSum(function(d) {
-                return d.http_200;
+            var type_read = dateDim.group().reduceSum(function(d) {
+                return d.read;
             });
-            var status_buildson = dateDim.group().reduceSum(function(d) {
+            var type_buildson = dateDim.group().reduceSum(function(d) {
                 return d.buildson;
             });
-            // var status_302 = dateDim.group().reduceSum(function(d) {
-            //     return d.http_302;
-            // });
-            // var status_404 = dateDim.group().reduceSum(function(d) {
-            //     return d.http_404;
-            // });
             var hitslineChart = dc.lineChart("#chart-line-hitsperday");
             hitslineChart
                 .width(700).height(200)
                 .dimension(dateDim)
-                .group(status_200, "Read")
-                .stack(status_buildson, "Buildson")
-                //.stack(status_302, "302")
-                //.stack(status_404, "404")
+                .group(type_read, "Read")
+                .stack(type_buildson, "Buildson")
                 .renderArea(true)
                 .x(d3.time.scale().domain([minDate, maxDate]))
                 .legend(dc.legend().x(50).y(10).itemHeight(13).gap(5))
                 .yAxisLabel("Hits per day");
 
-            //pie
-
-            //パイチャートのdimensionを作成
-            var yearDim = ndx.dimension(function(d) {
+            //pie chart
+            var typeDim = ndx.dimension(function(d) {
                 return d.type;
             });
-            //パイチャートののkey-valueデータをyearDimから作成
-            var year_total = yearDim.group().reduceSum(function(d) {
+            gTypeDim = typeDim;
+
+            var type_total = typeDim.group().reduceSum(function(d) {
                 return d.total;
             });
-            var yearRingChart = dc.pieChart("#chart-ring-year");
-            yearRingChart
+            var typeRingChart = dc.pieChart("#chart-ring-year");
+            typeRingChart
                 .width(200).height(200)
-                .dimension(yearDim)
-                .group(year_total)
+                .dimension(typeDim)
+                .group(type_total)
                 .innerRadius(30);
 
             $scope.updateChord = function() {
                 $scope.master = []; // MASTER DATA STORED BY YEAR
-                //d3.csv('/assets/trade.csv', function(err, data2) {
-                // console.log(yearDim);
-                // console.log('group');
-                // console.log(yearDim.group());
-                // console.log(yearDim.group().size()); //returns 4                  
-                // console.log(yearDim.group().order().size()); //returns 4                                      
-                // console.log(yearDim.group().all()); //returns 4 
-                // console.log('filter');
-                // console.log(yearDim.filterAll());
-                // console.log(yearDim.filterAll());
-                links.forEach(function(d) {
-                    //                    console.log(d.type);
-
+//                console.log('updateChord');
+                var filtered = typeDim.filter('READ').top(Infinity);
+//                links.forEach(function(d) {
+                filtered.forEach(function(d) {
                     d.importer1 = d.from;
                     d.importer2 = d.to;
                     d.flow1 = 0.1;
@@ -148,40 +117,27 @@ angular.module('s2vizApp')
                 $scope.drawChords($scope.master);
                 //});
             };
-            $scope.updateChord();
+            //$scope.updateChord();
 
-            //var chart = dc.baseMixin({});
-            //console.log(yearRingChart.dc);
-            //console.log(dc);
-            //console.log(dc.dc);
-            //console.log(dc.stackMixin);
-            //var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
-            //あきらめ
-            //console.log(dc);
-            //            var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
+            var hits = dateDim.group().reduceSum(function(d) {
+                //console.log('x');
+                return d.total;
+            });
 
             var x = dc.pieChart("#x");
             x
                 .width(200).height(200)
-                .dimension(yearDim)
-                .group(year_total)
+                .dimension(dateDim)
+                .group(hits)
                 .innerRadius(30);
-            //            console.log(x.doRedraw);
-            //console.log(x);
             x.doRedraw = function() {
-                //console.log('x');
                 $scope.updateChord();
+                gUpdateChord();
             };
             x.doRender = function() {
-                //console.log('y');
                 $scope.updateChord();
+                gUpdateChord();                
             };
-
-            // console.log(ndx);
-            // console.log(ndx.groupAll());
-            //ndx.order();
-            //            console.log(x._chart);
-            //            console.log(x.eval('_chart'));
 
             dc.renderAll();
         });
